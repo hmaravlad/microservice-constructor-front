@@ -4,6 +4,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -16,6 +17,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
+    HttpClientModule,
   ],
 })
 export class AuthModule { }
