@@ -1,0 +1,20 @@
+<div class="outer">
+  <div class="middle">
+    <div class="form-box">
+      <div class="header">Sign Up</div>
+      <form [formGroup]="signUpForm" (submit)="onSubmit()">
+        <label for="email">Email</label>
+        <input id="email" type="text" formControlName="email">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword">
+        <div class="error">{{error}}</div>
+        <div class="buttons">
+          <button routerLink="/sign-in">Sign in</button>
+          <button type="submit" [disabled]="!signUpForm.valid">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

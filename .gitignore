@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# vs-code
+.vscode/
+
+# angular
+.angular
