@@ -1,6 +1,8 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { isErrorResponse } from '../query-error.entity';
+import { UserCredentials } from '../user-credentials.entity';
 import { UserService } from '../user.service';
 
 @Component({
@@ -12,8 +14,10 @@ export class SignUpComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private userService: UserService, 
-    private location: Location,
+    private router: Router,
   ) {}
+
+  error = '';
 
   signUpForm = this.fb.group({
     email: this.fb.control(['']),
@@ -25,5 +29,21 @@ export class SignUpComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const user = this.signUpForm.value;
+    if (!this.checkPassword(user)) return;
+    this.userService.register(user).subscribe(x => {
+      if (!isErrorResponse(x)) {
+        this.error = '';
+        this.router.navigateByUrl('/sign-in');
+      } else {
+        this.error = x.message[0];
+      }
+    });
+  }
+
+  checkPassword(user: UserCredentials & { confirmPassword: string }): boolean {
+    const res = user.password === user.confirmPassword;
+    if (!res) this.error = 'Your password and confirmation password do not match';
+    return res;
   }
 }
