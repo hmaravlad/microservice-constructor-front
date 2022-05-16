@@ -7,6 +7,7 @@
         <input id="email" type="text" formControlName="email">
         <label for="password">Password</label>
         <input id="password" type="password" formControlName="password">
+        <div class="error">{{error}}</div>
         <div class="buttons">
           <button routerLink="/sign-up">Sign up</button>
           <button type="submit" [disabled]="!signInForm.valid">Submit</button>
