@@ -60,3 +60,8 @@ button {
 button:hover {
   background-color: rgb(47, 47, 184);
 }
+
+.error {
+  font-size: 10px;
+  color: red;
+}
