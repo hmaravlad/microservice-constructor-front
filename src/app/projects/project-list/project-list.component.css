@@ -1,0 +1,83 @@
+.outer-box {
+  width: 100%;
+  height: calc(100% - 140px);
+}
+
+.box {
+  align-self: center;
+  
+  width: 50%;
+  min-width: 200px;
+  margin: 20px 80px;
+  height: calc(100% - 40px);
+}
+
+.flex-box {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.list-box {
+  margin-top: 10px;
+  height: calc(100%-30px);
+  width: 60%;
+  padding-left: 15px;
+  padding-top: 0;
+  overflow-y: auto;
+}
+
+.side {
+  width: 40%;
+}
+
+.project-name {
+  padding: 5px;
+}
+
+li:hover {
+  background-color: rgba(221, 221, 221, 0.788);
+}
+
+.header {
+  font-size: 20px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+hr {
+  border-top: 1px solid rgb(185, 185, 185);
+  margin: 0;
+}
+
+.buttons {
+  width: 100%;
+  padding: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;  
+}
+
+button {
+  padding: 14px;
+
+  width: 40%;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  font-size: 16px;
+  background-color: rgb(68, 68, 216);
+  color: white;
+  border: none;
+  border-radius: 10px;
+}

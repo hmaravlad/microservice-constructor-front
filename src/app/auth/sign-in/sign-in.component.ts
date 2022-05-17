@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { isErrorResponse } from '../query-error.entity';
+import { isErrorResponse } from '../../http-utils/query-error.entity';
 import { isUser } from '../user.entity';
 import { UserService } from '../user.service';
 
@@ -25,6 +25,9 @@ export class SignInComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.userService.getUser().subscribe(user => {
+      if (isUser(user)) this.router.navigateByUrl('/projects');
+    });
   }
 
   onSubmit(): void {

@@ -1,0 +1,25 @@
+<div class="outer-box">
+  <div class="box">
+    <div class="header">Projects</div>
+    <hr>
+    <div class="flex-box">
+      <div class="list-box">
+        <ul>
+          <div *ngFor="let project of projects">
+            <li (click)="setCurrProject(project)">
+              <div class="project-name">{{project.name}}</div>
+              <hr>
+            </li>
+          </div>
+        </ul>
+      </div>
+      <div class="side">
+        <app-project *ngIf="currProject" [project]="currProject"></app-project>
+        <div class="buttons">
+          <button>New Project</button>
+          <button *ngIf="currProject">Load</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
