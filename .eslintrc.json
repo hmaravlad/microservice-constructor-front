@@ -8,9 +8,6 @@
         "plugin:@typescript-eslint/recommended",
         "airbnb-typescript/base"
     ],
-    "rules": {
-        "space-before-blocks": "off"
-    },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -22,5 +19,11 @@
         "@angular-eslint",
         "import"
     ],
-    "ignorePatterns": ["karma.conf.js"]
+    "rules": {
+        "lines-between-class-members": "off",
+        "@typescript-eslint/lines-between-class-members": "off"
+    },
+    "ignorePatterns": [
+        "karma.conf.js"
+    ]
 }
