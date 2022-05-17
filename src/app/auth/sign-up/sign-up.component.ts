@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { isErrorResponse } from '../query-error.entity';
+import { isErrorResponse } from '../../http-utils/query-error.entity';
 import { UserCredentials } from '../user-credentials.entity';
 import { UserService } from '../user.service';
 

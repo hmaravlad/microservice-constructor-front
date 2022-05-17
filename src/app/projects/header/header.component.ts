@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { isErrorResponse } from 'src/app/auth/query-error.entity';
+import { isErrorResponse } from 'src/app/http-utils/query-error.entity';
 import { UserService } from 'src/app/auth/user.service';
 
 @Component({
