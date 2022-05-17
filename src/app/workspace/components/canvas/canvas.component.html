@@ -1,0 +1,9 @@
+<div #canvas_box id="canvas-box">
+  <canvas 
+    #canvas 
+    id="canvas"
+    width="1800"
+    height="1200">
+  </canvas>
+  <app-entity *ngFor="let entity of entities" [mouseMoveParent$]="mouseMove$" [mouseUpParent$]="mouseUp$" [mouseOutParent$]="mouseOut$" [id]="entity.id" [type]="entity.type"></app-entity>
+</div>

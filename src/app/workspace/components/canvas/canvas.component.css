@@ -1,0 +1,11 @@
+#canvas-box {
+  width: 1800px;
+  height: 1200px;
+  position: relative;
+}
+
+#canvas {
+  background-color: white;
+  width: 1800px;
+  height: 1200px;
+}

@@ -1,0 +1,21 @@
+#toolbox {
+  height: 40%;
+  overflow: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: white;
+  border-bottom: solid 2px black;
+}
+
+#sidebar {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+}
+
+#editor {
+  background-color: white;
+  overflow: auto;
+  height: 60%;
+}
