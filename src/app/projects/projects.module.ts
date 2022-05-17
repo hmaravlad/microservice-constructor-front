@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { ProjectsComponent } from './projects.component';
 import { RouterModule } from '@angular/router';
+import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectComponent } from './project/project.component';
 
 
 
@@ -10,6 +12,8 @@ import { RouterModule } from '@angular/router';
   declarations: [
     HeaderComponent,
     ProjectsComponent,
+    ProjectListComponent,
+    ProjectComponent,
   ],
   imports: [
     CommonModule,
