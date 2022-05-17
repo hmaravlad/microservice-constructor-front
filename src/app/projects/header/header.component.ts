@@ -4,7 +4,7 @@ import { isErrorResponse } from 'src/app/http-utils/query-error.entity';
 import { UserService } from 'src/app/auth/user.service';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-projects-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
