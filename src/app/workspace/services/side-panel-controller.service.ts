@@ -16,7 +16,7 @@ export class SidePanelControllerService {
     this.panelState.next(SidePanelState.APIEditor);
   }
 
-  openProjectConfigEditorOpen() {
+  openProjectConfigEditor() {
     this.panelState.next(SidePanelState.ProjectConfigEditor);
   }
 
