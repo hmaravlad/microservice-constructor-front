@@ -12,6 +12,8 @@ import { MenuEntityComponent } from './components/menu-entity/menu-entity.compon
 import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { FormsModule } from '@angular/forms';
 import { ApiEditorComponent } from './components/api-editor/api-editor.component';
+import { ProjectEditorComponent } from './components/project-editor/project-editor.component';
+import { ProjectInputComponent } from './components/project-input/project-input.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,10 @@ import { ApiEditorComponent } from './components/api-editor/api-editor.component
     EntityInputComponent,
     CanvasComponent,
     ApiEditorComponent,
-    ToPxPipe, SidePanelComponent,
+    SidePanelComponent, 
+    ProjectEditorComponent, 
+    ProjectInputComponent,
+    ToPxPipe,
   ],
   imports: [
     CommonModule,

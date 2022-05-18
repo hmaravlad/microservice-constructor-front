@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SidePanelControllerService } from '../../services/side-panel-controller.service';
 
 @Component({
   selector: 'app-workspace-header',
@@ -6,15 +7,12 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  @Output() clicked = new EventEmitter<boolean>();
-  opened = false;
+  constructor(private sidePanelControllerService: SidePanelControllerService) {}
 
   ngOnInit(): void {
   }
 
-  onClick() {
-    this.opened = !this.opened;
-    this.clicked.emit(this.opened);
+  onChangeSettings(): void {
+    this.sidePanelControllerService.openProjectConfigEditor();
   }
-
 }

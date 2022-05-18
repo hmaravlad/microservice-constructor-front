@@ -1,0 +1,7 @@
+<div id="editor">
+  <div class="header">Project Setting</div>
+  <div *ngFor="let field of fields">
+    <app-project-input [field]="field"></app-project-input>
+  </div>
+  <button (click)="onSubmit()">Submit</button>
+</div>

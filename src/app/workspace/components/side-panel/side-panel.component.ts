@@ -12,11 +12,17 @@ export class SidePanelComponent implements OnInit {
   constructor(private entityService: EntityService) {}
 
   @Input() state = SidePanelState.Closed;
+  isAPIEditor = false;
+  isProjectEditor = false;
   
   apiConfig: APIConfig = { endpointGroups: [] };
   id = 0;
 
+  
+
   ngOnInit(): void {
+    this.isAPIEditor = this.state === SidePanelState.APIEditor;
+    this.isProjectEditor = this.state === SidePanelState.ProjectConfigEditor;
     this.entityService.activeEntity.subscribe((entity) => {
       if (this.state !== SidePanelState.APIEditor) return;
       if (!entity) return;

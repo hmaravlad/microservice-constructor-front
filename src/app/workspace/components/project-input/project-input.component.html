@@ -1,0 +1,36 @@
+<div>
+  <div *ngIf="field.type==='string'">
+    <div class="label">
+      <label for={{field.name}}>{{field.name}}: </label>
+    </div>
+    <div class="input">
+      <input type="text" name={{field.name}} value={{currValue}} (input)="onStringInput($event)">
+    </div>
+  </div>
+  <div *ngIf="field.type==='number'">
+    <div class="label">
+      <label for={{field.name}}>{{field.name}}: </label>
+    </div>
+    <div class="input">
+      <input type="number" name={{field.name}} value={{currValue}} (input)="onNumberInput($event)">
+    </div>
+  </div>
+  <div *ngIf="field.type==='boolean'">
+    <div class="label">
+      <label for={{field.name}}>{{field.name}}: </label>
+    </div>
+    <div class="input">
+      <input type="checkbox" name={{field.name}} [checked]="currValue" (input)="onBooleanInput($event)">
+    </div>
+  </div>
+  <div *ngIf="field.type==='enum'">
+    <div class="label">
+      <label for={{field.name}}>{{field.name}}: </label>
+    </div>
+    <div class="input">
+      <select name={{field.name}} value={{currValue}} (input)="onEnumInput($event)">
+        <option *ngFor="let option of field.possibleValues!" class="option" [value]="option">{{option}}</option>
+      </select>
+    </div>
+  </div>
+</div>
