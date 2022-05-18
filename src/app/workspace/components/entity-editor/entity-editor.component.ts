@@ -42,4 +42,10 @@ export class EntityEditorComponent implements AfterViewInit {
       return !field.isId && !field.references;
     });
   }
+
+  removeAllConnections() {
+    if (this.activeEntity) {
+      this.entityService.removeAllRelations(this.activeEntity.id);
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest, fromEvent, map, merge, Observable, switchMap, takeUntil } from 'rxjs';
+import { BehaviorSubject, fromEvent, map, merge, Observable, switchMap, takeUntil } from 'rxjs';
 import { EntityPositionProviderService } from '../../services/entity-position-provider.service';
 import { EntityService } from '../../services/entity.service';
 import { LinesCreatorService } from '../../services/lines-creator.service';
@@ -49,6 +49,7 @@ export class EntityComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.entityService.observeEntityComponent(this.id, this);
   }
 
   ngAfterViewInit(): void {
@@ -166,21 +167,7 @@ export class EntityComponent implements OnInit {
       this.linesCreatorService.removeLine(line$);
       const box = this.entityPositionProvider.checkIfInside();
       if (box) {
-        const connection$: Observable<Line> = combineLatest({
-          x1: this.x,
-          y1: this.y,
-          x2: box.x,
-          y2: box.y,
-        }).pipe(map(line => {
-          return {
-            x1: line.x1 + this.halfWidth,
-            y1: line.y1 + this.halfHeight,
-            x2: line.x2 + box.halfWidth,
-            y2: line.y2 + box.halfHeight,
-          };
-        }));
-        const isValid = this.entityService.addRelation(this.id, box.id);
-        if (isValid) this.linesCreatorService.addLine(connection$);
+        this.entityService.tryConnectIds(this.id, box.id);
       }
       sub.unsubscribe();
     });

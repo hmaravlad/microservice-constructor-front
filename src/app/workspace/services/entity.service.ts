@@ -1,19 +1,33 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { EntityDescriptionProviderService } from './entity-description-provider.service';
 import { FieldDescription } from '../types/field-description';
 import { FieldValue } from '../types/field-type';
 import { Entity } from '../types/entity';
+import { Relation } from '../types/relation';
+import { EntityComponent } from '../components/entity/entity.component';
+import { LinesCreatorService } from './lines-creator.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EntityService {
-  constructor(private entityDescriptionProviderService: EntityDescriptionProviderService) { }
-
   entities: Entity[] = [];
 
   activeEntity = new BehaviorSubject<Entity | undefined>(undefined);
+
+  relations: Relation[] = [];
+
+  entityComponents = new Map<number, EntityComponent>();
+
+  constructor(
+    private entityDescriptionProviderService: EntityDescriptionProviderService,
+    private linesCreatorService: LinesCreatorService,
+  ) { }
+
+  observeEntityComponent(id: number, entityComponent: EntityComponent) {
+    this.entityComponents.set(id, entityComponent);
+  }
 
   addEntity(id: number, type: string) {
     if (this.entities.find((e) => e.id === id)) throw new Error('Invalid id assignment. There already exists entity with this id');
@@ -24,7 +38,7 @@ export class EntityService {
 
     const fields: Record<string, BehaviorSubject<FieldValue>> = {};
     const relations: Record<string, number[]> = {};
-  
+
     for (const relation of relationDescriptions) {
       relations[relation.name] = [];
     }
@@ -93,7 +107,7 @@ export class EntityService {
     return data;
   }
 
-  addRelation(id1: number, id2: number): boolean {
+  tryConnectIds(id1: number, id2: number): boolean {
     const entity1 = this.entities.find(e => e.id === id1);
     if (!entity1) return false;
     const entity2 = this.entities.find(e => e.id === id2);
@@ -104,12 +118,54 @@ export class EntityService {
     const referenceField2 = entityData2?.fields.find(f => f.references?.includes(entity1.type));
     if (referenceField1) {
       entity1.relations[referenceField1.name].push(entity2.id);
+      this.addRelation(id1, id2);
       return true;
     }
     if (referenceField2) {
       entity2.relations[referenceField2.name].push(entity1.id);
+      this.addRelation(id1, id2);
       return true;
     }
     return false;
+  }
+
+  removeAllRelations(id: number) {
+    const entity = this.entities.find(e => e.id === id);
+    if (!entity) throw new Error('There is no entity with provided id');
+    for (const relation in entity.relations) {
+      entity.relations[relation] = [];
+    }
+    for (const e of this.entities) {
+      for (const relation in e.relations) {
+        e.relations[relation] = e.relations[relation].filter(entityId => entityId !== id);
+      }
+    }
+    for (const relation of this.relations) {
+      if (relation.id1 === id || relation.id2 === id) {
+        this.linesCreatorService.removeLine(relation.line$);
+      }
+    }
+    this.relations = this.relations.filter(relation => relation.id1 !== id && relation.id2 !== id);
+  }
+
+  addRelation(id1: number, id2: number) {
+    const entity1 = this.entityComponents.get(id1);
+    const entity2 = this.entityComponents.get(id2);
+    if (!entity1 || !entity2) throw new Error('There is no entity with provided id');
+    const line$ = combineLatest({
+      x1: entity1.x,
+      y1: entity1.y,
+      x2: entity2.x,
+      y2: entity2.y,
+    }).pipe(map(line => {
+      return {
+        x1: line.x1 + entity1.halfWidth,
+        y1: line.y1 + entity1.halfHeight,
+        x2: line.x2 + entity2.halfWidth,
+        y2: line.y2 + entity2.halfHeight,
+      };
+    }));
+    this.linesCreatorService.addLine(line$);
+    this.relations.push({ id1, id2, line$ });
   }
 }
