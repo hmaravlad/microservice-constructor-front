@@ -35,7 +35,7 @@ export class Entity {
 export class Value {
   type: string | EntityRef;
 
-  items?: Value;
+  items?: string | Value;
 }
 
 export class Field extends Value {
@@ -58,4 +58,8 @@ export function isEntityRef(obj: unknown): obj is EntityRef {
 
 export function isValue(obj: unknown): obj is Value {
   return (obj as Value).type !== undefined;
+}
+
+export function isAPIConfig(obj: unknown): obj is APIConfig {
+  return (obj as APIConfig).endpointGroups !== undefined;
 }
