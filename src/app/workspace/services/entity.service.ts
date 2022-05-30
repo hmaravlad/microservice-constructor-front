@@ -7,10 +7,11 @@ import { Entity } from '../types/entity';
 import { Relation } from '../types/relation';
 import { EntityComponent } from '../components/entity/entity.component';
 import { LinesCreatorService } from './lines-creator.service';
+import { EntityExported } from '../types/entity-exported';
+import { IdGeneratorService } from './id-generator.service';
+import { APIConfig, EntityRef, isAPIConfig } from '../types/api-config';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class EntityService {
   entities: Entity[] = [];
 
@@ -20,9 +21,13 @@ export class EntityService {
 
   entityComponents = new Map<number, EntityComponent>();
 
+  projectId = 1;
+  initEntitiesLength = 0;
+
   constructor(
     private entityDescriptionProviderService: EntityDescriptionProviderService,
     private linesCreatorService: LinesCreatorService,
+    private idGenerator: IdGeneratorService,
   ) { }
 
   observeEntityComponent(id: number, entityComponent: EntityComponent) {
@@ -30,6 +35,13 @@ export class EntityService {
   }
 
   addEntity(id: number, type: string) {
+    const entity = this.getDefaultEntity(id, type);
+    this.entities.push(entity);
+
+  }
+
+  getDefaultEntity(id: number, type: string) {
+    console.dir({ id });
     if (this.entities.find((e) => e.id === id)) throw new Error('Invalid id assignment. There already exists entity with this id');
     const entityDescription = this.entityDescriptionProviderService.getEntityDescription();
 
@@ -48,7 +60,7 @@ export class EntityService {
       fields[field.name] = new BehaviorSubject(value);
     }
 
-    this.entities.push({ id, type, fields, relations });
+    return { id, type, fields, relations };
   }
 
   getDefaultValue(field: FieldDescription): FieldValue {
@@ -167,5 +179,136 @@ export class EntityService {
     }));
     this.linesCreatorService.addLine(line$);
     this.relations.push({ id1, id2, line$ });
+  }
+
+  addExportedEntity(exportedEntity: EntityExported) {
+    const entityDefault = this.getDefaultEntity(exportedEntity.id, exportedEntity.type);
+    const fieldsRaw = JSON.parse(exportedEntity.fields) as Record<string, FieldValue | number[]>;
+    const fields: Record<string, BehaviorSubject<FieldValue>> = {};
+    const relations: Record<string, number[]> = {};
+    for (const key in fieldsRaw) {
+      const field = fieldsRaw[key];
+      if (Array.isArray(field)) {
+        relations[key] = field;
+      } else {
+        fields[key] = new BehaviorSubject(field);
+      }
+    }
+    const entity: Entity = {
+      id: exportedEntity.id,
+      type: exportedEntity.type,
+      fields: { ...entityDefault.fields, ...fields },
+      relations: { ...entityDefault.relations, ...relations },
+    };
+    this.idGenerator.trySetMaxId(exportedEntity.id);
+    const entityComponent = this.entityComponents.get(entity.id);
+    if (!entityComponent) throw new Error('There is no entity with provided id');
+    entityComponent.setCoords(exportedEntity.x, exportedEntity.y);
+    this.entities.push(entity);
+    if (this.entities.length === this.initEntitiesLength) {
+      this.restoreRelations();
+    }
+  }
+
+  init(projectId: number, entitiesLength: number) {
+    this.projectId = projectId;
+    this.initEntitiesLength = entitiesLength;
+  }
+
+  restoreRelations() {
+    for (const entity of this.entities) {
+      for (const key in entity.relations) {
+        for (const i of entity.relations[key]) {
+          this.addRelation(entity.id, i);
+        }
+      }
+    }
+  }
+
+  exportEntities(): EntityExported[] {
+    return this.entities.map(e => this.getExportedEntity(e));
+  }
+
+  getExportedEntity(entity: Entity): EntityExported {
+    const entityComponent = this.entityComponents.get(entity.id);
+    if (!entityComponent) throw new Error('There is no entity with provided id');
+    const fields: Record<string, FieldValue | number[]> = {};
+    for (const key in entity.fields) {
+      fields[key] = entity.fields[key].getValue();
+    }
+    for (const key in entity.relations) {
+      fields[key] = entity.relations[key];
+    }
+    return {
+      id: entity.id,
+      projectId: this.projectId,
+      type: entity.type,
+      x: entityComponent.currX,
+      y: entityComponent.currY,
+      fields: JSON.stringify(fields),
+    };
+  }
+
+  getConfig(type: string): unknown[] {
+    return this.entities
+      .filter(x => x.type === type)
+      .map(e => {
+        const fields: Record<string, FieldValue> = {};
+        for (const key in e.fields) {
+          let value = e.fields[key].getValue();
+          if (isAPIConfig(value)) {
+            value = this.fixApiConfig(value);
+          }
+          fields[key] = value;
+        }
+        return {
+          id: e.id,
+          ...fields,
+          ...e.relations,
+        };
+      });
+  }
+
+  fixApiConfig(config: APIConfig): APIConfig {
+    for (const endpointGroup of config.endpointGroups) {
+      for (const endpoint of endpointGroup.endpoints) {
+        endpoint.request.content.type = this.toEntityRef(endpoint.request.content.type);
+        const requestItems = endpoint.request.content.items;
+        if (requestItems) {
+          if (typeof requestItems === 'string') {
+            endpoint.request.content.items = { type: this.toEntityRef(requestItems) };
+          }
+        }
+        endpoint.response.content.type = this.toEntityRef(endpoint.response.content.type);
+        const responseItems = endpoint.response.content.items;
+        if (responseItems) {
+          if (typeof responseItems === 'string') {
+            endpoint.response.content.items = { type: this.toEntityRef(responseItems) };
+          }
+        }
+      }
+      for (const entity of endpointGroup.entities) {
+        for (const field of entity.fields) {
+          field.type = this.toEntityRef(field.type);
+          const items = field.items;
+          if (items) {
+            if (typeof items === 'string') {
+              field.items = { type: this.toEntityRef(items) };
+            }
+          }
+        }
+      }
+    }
+    return config;
+  }
+
+  toEntityRef(value: string | EntityRef): string | EntityRef {
+    if (typeof value === 'string') {
+      if (!isNaN(parseInt(value))) {
+        const id = parseInt(value);
+        return { id };
+      }
+    }
+    return value;
   }
 }

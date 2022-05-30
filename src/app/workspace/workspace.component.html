@@ -1,11 +1,11 @@
-<app-workspace-header></app-workspace-header>
+<app-workspace-header [projectId]="projectId"></app-workspace-header>
 <div class="box">
   <div id="flex-container">
     <div id="toolbox-box">
       <app-toolbox></app-toolbox>
     </div>
     <div id="canvas-box">
-      <app-canvas></app-canvas>
+      <app-canvas [projectId]="projectId"></app-canvas>
     </div>
     <div id="side" *ngIf="isSidePanelOpened">
       <app-side-panel [state]="sidePanelState"></app-side-panel>

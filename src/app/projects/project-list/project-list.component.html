@@ -16,8 +16,8 @@
       <div class="side">
         <app-project *ngIf="currProject" [project]="currProject"></app-project>
         <div class="buttons">
-          <button>New Project</button>
-          <button *ngIf="currProject">Load</button>
+          <button (click)="onNewProject()">New Project</button>
+          <button (click)="onLoadProject()" *ngIf="currProject">Load</button>
         </div>
       </div>
     </div>

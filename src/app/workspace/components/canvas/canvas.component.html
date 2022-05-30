@@ -5,5 +5,5 @@
     width="1800"
     height="1200">
   </canvas>
-  <app-entity *ngFor="let entity of entities" [mouseMoveParent$]="mouseMove$" [mouseUpParent$]="mouseUp$" [mouseOutParent$]="mouseOut$" [id]="entity.id" [type]="entity.type"></app-entity>
+  <app-entity *ngFor="let entity of entities" [mouseMoveParent$]="mouseMove$" [mouseUpParent$]="mouseUp$" [mouseOutParent$]="mouseOut$" [id]="entity.id" [type]="entity.type" [entity]="entity"></app-entity>
 </div>

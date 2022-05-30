@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { Line } from '../types/line';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class LinesCreatorService {
 
   lastLines = new Map<Observable<Line>, Line>();

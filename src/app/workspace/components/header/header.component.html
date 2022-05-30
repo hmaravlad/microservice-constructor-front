@@ -1,11 +1,14 @@
 <div class="header">
   <div class="title">
-    <input value="Project 1" type="text">
+    <input value="Project 1" type="text"  (input)="onStringInput($event)">
   </div>
   <div class="button-row">
-    <button>Save Project</button>
+    <button (click)="onSave()">Save Project</button>
     <button (click)="onChangeSettings()">Edit Project</button>
     <button>Delete Project</button>
-    <button>Save and Exit</button>
+    <button (click)="onExport()">Export</button>
+    <button (click)="onSaveAndExit()">Save and Exit</button>
+    <button (click)="onExit()">Exit</button>
   </div>
+  <a #fileLink class="file-link"></a>
 </div>

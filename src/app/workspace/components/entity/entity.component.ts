@@ -3,6 +3,7 @@ import { BehaviorSubject, fromEvent, map, merge, Observable, switchMap, takeUnti
 import { EntityPositionProviderService } from '../../services/entity-position-provider.service';
 import { EntityService } from '../../services/entity.service';
 import { LinesCreatorService } from '../../services/lines-creator.service';
+import { EntityExported } from '../../types/entity-exported';
 import { Line } from '../../types/line';
 import { Point } from '../../types/point';
 
@@ -20,6 +21,7 @@ export class EntityComponent implements OnInit {
   @Input() mouseUpParent$: Observable<MouseEvent>;
   @Input() mouseOutParent$: Observable<MouseEvent>;
 
+  @Input() entity: EntityExported;
   @Input() id: number;
   @Input() type = '';
 
@@ -50,6 +52,7 @@ export class EntityComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityService.observeEntityComponent(this.id, this);
+    this.entityService.addExportedEntity(this.entity);
   }
 
   ngAfterViewInit(): void {
@@ -90,8 +93,6 @@ export class EntityComponent implements OnInit {
           this.name = name;
         }
       });
-    } else {
-      this.name = this.type + '-' + this.id;
     }
   }
 
@@ -184,5 +185,10 @@ export class EntityComponent implements OnInit {
     if (value < min) return min;
     if (value > max) return max;
     return value;
+  }
+
+  setCoords(x: number, y: number) {
+    this.x.next(x);
+    this.y.next(y);
   }
 }

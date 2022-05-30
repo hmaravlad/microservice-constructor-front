@@ -1,22 +1,27 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, Observable, Subject } from 'rxjs';
+import { isErrorResponse } from 'src/app/http-utils/query-error.entity';
+import { ProjectService } from 'src/app/projects/project.service';
 import { EntityCreatorService } from '../../services/entity-creator.service';
 import { EntityService } from '../../services/entity.service';
 import { IdGeneratorService } from '../../services/id-generator.service';
 import { LinesCreatorService } from '../../services/lines-creator.service';
+import { EntityExported } from '../../types/entity-exported';
 
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas_box', { static: true }) canvasBoxElement!: ElementRef;
   @ViewChild('canvas') canvasElement: ElementRef<HTMLCanvasElement>;
 
   public context: CanvasRenderingContext2D;
 
-  entities: { id: number, type: string }[] = [];
+  @Input() projectId = 0;
+
+  entities: EntityExported[] = [];
 
   mouseMoveSubject = new Subject<MouseEvent>();
   mouseUpSubject = new Subject<MouseEvent>();
@@ -28,13 +33,23 @@ export class CanvasComponent implements AfterViewInit {
 
 
   constructor(
-    private linesCreatorService: LinesCreatorService, 
+    private linesCreatorService: LinesCreatorService,
     private entityCreatorService: EntityCreatorService,
     private entityService: EntityService,
     private idGeneratorService: IdGeneratorService,
+    private projectService: ProjectService,
   ) { }
 
+  ngOnInit(): void {
+    this.projectService.getProject(this.projectId).subscribe(project => {
+      if (isErrorResponse(project)) throw new Error();
+      this.entityService.init(this.projectId, project.entities.length);
+      this.entities = project.entities;
+    });
+  }
+
   ngAfterViewInit(): void {
+
     const context = this.canvasElement.nativeElement.getContext('2d');
     if (!context) throw new Error();
     this.context = context;
@@ -69,10 +84,9 @@ export class CanvasComponent implements AfterViewInit {
       }
     });
 
-    this.entityCreatorService.onCreateEntity().subscribe((type)=> {
+    this.entityCreatorService.onCreateEntity().subscribe((type) => {
       const id = this.idGeneratorService.getId();
-      this.entities.push({ id, type });
-      this.entityService.addEntity(id, type);
+      this.entities.push({ id, type, x: 100, y: 100, projectId: this.projectId, fields: JSON.stringify({}) });
     });
 
     this.entityService.enableSelectionRemoving(mouseClick$);
