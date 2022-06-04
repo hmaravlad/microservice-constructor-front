@@ -1,10 +1,12 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { SimpleModalService } from 'ngx-simple-modal';
 import { EntityDescriptionProviderService } from '../../services/entity-description-provider.service';
 import { EntityService } from '../../services/entity.service';
 import { SidePanelControllerService } from '../../services/side-panel-controller.service';
 import { Entity } from '../../types/entity';
 import { EntityInputData } from '../../types/entity-input-data';
 import { FieldDescription } from '../../types/field-description';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-entity-editor',
@@ -19,6 +21,7 @@ export class EntityEditorComponent implements AfterViewInit {
     private entityService: EntityService,
     private entityDescriptions: EntityDescriptionProviderService,
     private sidePanelControllerService: SidePanelControllerService,
+    private simpleModalService: SimpleModalService,
   ) { }
 
   ngAfterViewInit(): void {
@@ -47,5 +50,17 @@ export class EntityEditorComponent implements AfterViewInit {
     if (this.activeEntity) {
       this.entityService.removeAllRelations(this.activeEntity.id);
     }
+  }
+
+  removeEntity() {
+    this.simpleModalService.addModal(ConfirmComponent, {
+      title: 'Delete',
+      message: 'Are you sure you want to delete this entity ?',
+    }, { animationDuration: 1 }).subscribe(isSubmitted => {
+      if (isSubmitted && this.activeEntity) {
+        this.entityService.removeAllRelations(this.activeEntity.id);
+        this.entityService.removeEntity(this.activeEntity.id);
+      }
+    });
   }
 }

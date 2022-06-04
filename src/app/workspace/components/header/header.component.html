@@ -1,11 +1,11 @@
 <div class="header">
   <div class="title">
-    <input value="Project 1" type="text"  (input)="onStringInput($event)">
+    <input [(ngModel)]="projectDataService.name" type="text"  (input)="onStringInput($event)">
   </div>
   <div class="button-row">
     <button (click)="onSave()">Save Project</button>
     <button (click)="onChangeSettings()">Edit Project</button>
-    <button>Delete Project</button>
+    <button (click)="onDelete()">Delete Project</button>
     <button (click)="onExport()">Export</button>
     <button (click)="onSaveAndExit()">Save and Exit</button>
     <button (click)="onExit()">Exit</button>

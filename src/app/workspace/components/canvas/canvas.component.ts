@@ -89,6 +89,12 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       this.entities.push({ id, type, x: 100, y: 100, projectId: this.projectId, fields: JSON.stringify({}) });
     });
 
+    this.entityService.onRemoveEntity().subscribe(id => {
+      const i = this.entities.findIndex(entity => entity.id === id);
+      if (i === -1) return;
+      this.entities.splice(i, 1);
+    });
+
     this.entityService.enableSelectionRemoving(mouseClick$);
   }
 }

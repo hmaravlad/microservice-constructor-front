@@ -1,38 +1,41 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { SimpleModalService } from 'ngx-simple-modal';
 import { Observable } from 'rxjs';
 import { isErrorResponse } from 'src/app/http-utils/query-error.entity';
 import { ProjectService } from 'src/app/projects/project.service';
 import { EntityService } from '../../services/entity.service';
 import { ProjectDataService } from '../../services/project.service';
 import { SidePanelControllerService } from '../../services/side-panel-controller.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({
   selector: 'app-workspace-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements AfterViewInit {
   constructor(
     private sidePanelControllerService: SidePanelControllerService,
-    private projectDataService: ProjectDataService,
     private projectService: ProjectService,
     private entityService: EntityService,
+    private simpleModalService: SimpleModalService,
     private router: Router,
-  ) {}
+    public projectDataService: ProjectDataService,
+  ) { }
 
   @Input() projectId = 0;
 
   @ViewChild('fileLink', { static: true }) fileLink!: ElementRef;
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
   }
 
   onStringInput(event: Event) {
     const elem = event.target as HTMLInputElement;
     const data = elem.value;
     if (!data) return;
-    this.projectDataService.setName(data);
+    //this.projectDataService.setName(data);
   }
 
   onChangeSettings(): void {
@@ -74,5 +77,21 @@ export class HeaderComponent implements OnInit {
     element.setAttribute('download', fileName);
     const event = new MouseEvent('click');
     element.dispatchEvent(event);
+  }
+
+  onDelete() {
+    this.simpleModalService.addModal(ConfirmComponent, {
+      title: 'Delete',
+      message: 'Are you sure you want to delete this project ?',
+    }, { animationDuration: 1 })
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.projectService.deleteProject(this.projectId).subscribe(x => {
+            if (!isErrorResponse(x)) {
+              this.router.navigateByUrl('/projects');
+            }
+          });
+        }
+      });
   }
 }

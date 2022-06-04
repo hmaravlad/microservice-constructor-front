@@ -49,4 +49,12 @@ export class ProjectService {
         shareReplay(1),
       );
   }
+
+  deleteProject(projectId: number): Observable<HttpResponse<unknown> | ErrorResponse> {
+    return this.http.delete(`${environment.apiUrl}/projects/${projectId}`, { observe: 'response', withCredentials: true })
+      .pipe(
+        catchError(handleHttpError),
+        shareReplay(1),
+      );
+  }
 }

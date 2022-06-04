@@ -24,21 +24,18 @@ export class ProjectDataService {
       this.setField(field.name, this.getDefaultValue(field));
     }
     this.name = project.name;
+    console.dir({ project, name: project.name });
     const existingFields = JSON.parse(project.fields);
     this.fields = { ...this.fields, ...existingFields };
   }
 
   export(): ProjectExported {
     return {
+      //name: this.name.getValue(),
       name: this.name,
       fields: JSON.stringify(this.fields),
     };
   }
-
-  setName(value: string) {
-    this.name = value;
-  }
-
   setField(field: string, value: FieldValue) {
     this.fields[field] = value;
   }

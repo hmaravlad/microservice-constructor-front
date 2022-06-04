@@ -14,6 +14,8 @@ import { FormsModule } from '@angular/forms';
 import { ApiEditorComponent } from './components/api-editor/api-editor.component';
 import { ProjectEditorComponent } from './components/project-editor/project-editor.component';
 import { ProjectInputComponent } from './components/project-input/project-input.component';
+import { DefaultSimpleModalOptionConfig, defaultSimpleModalOptions, SimpleModalModule } from 'ngx-simple-modal';
+import { ConfirmComponent } from './components/confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -26,17 +28,25 @@ import { ProjectInputComponent } from './components/project-input/project-input.
     EntityInputComponent,
     CanvasComponent,
     ApiEditorComponent,
-    SidePanelComponent, 
-    ProjectEditorComponent, 
+    SidePanelComponent,
+    ProjectEditorComponent,
     ProjectInputComponent,
     ToPxPipe,
+    ConfirmComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
+    SimpleModalModule,
   ],
   exports: [
     WorkspaceComponent,
+  ],
+  providers: [
+    {
+      provide: DefaultSimpleModalOptionConfig,
+      useValue: { ...defaultSimpleModalOptions, ...{ closeOnClickOutside: true, Animation: null } },
+    },
   ],
 })
 export class WorkspaceModule { }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, Subject } from 'rxjs';
 import { EntityDescriptionProviderService } from './entity-description-provider.service';
 import { FieldDescription } from '../types/field-description';
 import { FieldValue } from '../types/field-type';
@@ -20,6 +20,8 @@ export class EntityService {
   relations: Relation[] = [];
 
   entityComponents = new Map<number, EntityComponent>();
+
+  deletedEntityId$ = new Subject<number>();
 
   projectId = 1;
   initEntitiesLength = 0;
@@ -81,6 +83,14 @@ export class EntityService {
     const entity = this.entities[i];
     if (!entity) throw new Error('There is no entity with provided id');
     this.entities.splice(i, 1);
+    this.deletedEntityId$.next(id);
+    if (this.activeEntity.getValue()?.id === id) {
+      this.activeEntity.next(undefined);
+    }
+  }
+
+  onRemoveEntity(): Observable<number> {
+    return this.deletedEntityId$.asObservable();
   }
 
   enableSelection(dblclick$: Observable<MouseEvent>, entityId: number) {
