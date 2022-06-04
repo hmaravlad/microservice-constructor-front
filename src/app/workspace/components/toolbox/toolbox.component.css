@@ -1,3 +1,10 @@
+#sidebar {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+}
+
 #toolbox {
   height: 40%;
   overflow: auto;
@@ -7,15 +14,14 @@
   border-bottom: solid 2px black;
 }
 
-#sidebar {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-  width: 100%;
-}
-
 #editor {
   background-color: white;
   overflow: auto;
-  height: 60%;
+  height: 40%;
+  border-bottom: solid 2px black;
+}
+
+#errors {
+  height: 17%;
+  overflow: auto;
 }

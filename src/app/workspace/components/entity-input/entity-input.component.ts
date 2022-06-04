@@ -26,14 +26,14 @@ export class EntityInputComponent implements OnInit {
   onStringInput(event: Event) {
     const elem = event.target as HTMLInputElement;
     const data = elem.value;
-    if (!data) return;
+    if (data === undefined) return;
     this.entityService.setField(this.id, this.field.name, data);
   }
 
   onNumberInput(event: Event) {
     const elem = event.target as HTMLInputElement;
     const data = elem.valueAsNumber;
-    if (!data) return;
+    if (data === undefined) return;
     this.entityService.setField(this.id, this.field.name, data);
   }
 

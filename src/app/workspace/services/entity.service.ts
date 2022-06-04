@@ -10,6 +10,7 @@ import { LinesCreatorService } from './lines-creator.service';
 import { EntityExported } from '../types/entity-exported';
 import { IdGeneratorService } from './id-generator.service';
 import { APIConfig, EntityRef, isAPIConfig } from '../types/api-config';
+import { ErrorsService } from './errors.service';
 
 @Injectable()
 export class EntityService {
@@ -30,6 +31,7 @@ export class EntityService {
     private entityDescriptionProviderService: EntityDescriptionProviderService,
     private linesCreatorService: LinesCreatorService,
     private idGenerator: IdGeneratorService,
+    private errorsService: ErrorsService,
   ) { }
 
   observeEntityComponent(id: number, entityComponent: EntityComponent) {
@@ -39,11 +41,9 @@ export class EntityService {
   addEntity(id: number, type: string) {
     const entity = this.getDefaultEntity(id, type);
     this.entities.push(entity);
-
   }
 
   getDefaultEntity(id: number, type: string) {
-    console.dir({ id });
     if (this.entities.find((e) => e.id === id)) throw new Error('Invalid id assignment. There already exists entity with this id');
     const entityDescription = this.entityDescriptionProviderService.getEntityDescription();
 
@@ -110,6 +110,7 @@ export class EntityService {
     if (!entity) throw new Error('There is no entity with provided id');
     const data = entity.fields[field];
     if (!data) throw new Error('Invalid entity field');
+    this.checkField(id, field, value);
     data.next(value);
   }
 
@@ -127,6 +128,16 @@ export class EntityService {
     const data = entity.fields[field].getValue();
     if (!data) return;
     return data;
+  }
+
+  checkField(id: number, field: string, value: FieldValue): void {
+    if (typeof value !== 'string') return;
+    const key = `${field}-${id}`;
+    if (value.trim() === '') {
+      this.errorsService.addStateError(`${id}: field "${field}" can't be empty`, key);
+    } else {
+      this.errorsService.removeStateError(key);
+    }
   }
 
   tryConnectIds(id1: number, id2: number): boolean {
@@ -215,6 +226,9 @@ export class EntityService {
     if (!entityComponent) throw new Error('There is no entity with provided id');
     entityComponent.setCoords(exportedEntity.x, exportedEntity.y);
     this.entities.push(entity);
+    for (const field in entity.fields) {
+      this.checkField(exportedEntity.id, field, entity.fields[field].getValue());
+    }
     if (this.entities.length === this.initEntitiesLength) {
       this.restoreRelations();
     }

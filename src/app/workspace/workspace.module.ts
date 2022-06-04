@@ -16,6 +16,7 @@ import { ProjectEditorComponent } from './components/project-editor/project-edit
 import { ProjectInputComponent } from './components/project-input/project-input.component';
 import { DefaultSimpleModalOptionConfig, defaultSimpleModalOptions, SimpleModalModule } from 'ngx-simple-modal';
 import { ConfirmComponent } from './components/confirm/confirm.component';
+import { ErrorListComponent } from './components/error-list/error-list.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     ProjectInputComponent,
     ToPxPipe,
     ConfirmComponent,
+    ErrorListComponent,
   ],
   imports: [
     CommonModule,

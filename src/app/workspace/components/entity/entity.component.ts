@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, fromEvent, map, merge, Observable, switchMap, takeUntil } from 'rxjs';
 import { EntityPositionProviderService } from '../../services/entity-position-provider.service';
 import { EntityService } from '../../services/entity.service';
+import { ErrorsService } from '../../services/errors.service';
 import { LinesCreatorService } from '../../services/lines-creator.service';
 import { EntityExported } from '../../types/entity-exported';
 import { Line } from '../../types/line';
@@ -48,6 +49,7 @@ export class EntityComponent implements OnInit {
     private linesCreatorService: LinesCreatorService,
     private entityPositionProvider: EntityPositionProviderService,
     private entityService: EntityService,
+    private errorsService: ErrorsService,
   ) { }
 
   ngOnInit(): void {
@@ -168,7 +170,10 @@ export class EntityComponent implements OnInit {
       this.linesCreatorService.removeLine(line$);
       const box = this.entityPositionProvider.checkIfInside();
       if (box) {
-        this.entityService.tryConnectIds(this.id, box.id);
+        const success = this.entityService.tryConnectIds(this.id, box.id);
+        if (!success && this.id !== box.id) {
+          this.errorsService.addEventError(`Object ${this.id} can't be connected with object ${box.id}`);
+        }
       }
       sub.unsubscribe();
     });

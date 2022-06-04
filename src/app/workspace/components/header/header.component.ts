@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { isErrorResponse } from 'src/app/http-utils/query-error.entity';
 import { ProjectService } from 'src/app/projects/project.service';
 import { EntityService } from '../../services/entity.service';
+import { ErrorsService } from '../../services/errors.service';
 import { ProjectDataService } from '../../services/project.service';
 import { SidePanelControllerService } from '../../services/side-panel-controller.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
@@ -20,6 +21,7 @@ export class HeaderComponent implements AfterViewInit {
     private projectService: ProjectService,
     private entityService: EntityService,
     private simpleModalService: SimpleModalService,
+    private errorsService: ErrorsService,
     private router: Router,
     public projectDataService: ProjectDataService,
   ) { }
@@ -31,11 +33,14 @@ export class HeaderComponent implements AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  onStringInput(event: Event) {
-    const elem = event.target as HTMLInputElement;
-    const data = elem.value;
-    if (!data) return;
-    //this.projectDataService.setName(data);
+  onNameChange(data: string) {
+    if (data === undefined) return;
+    const key = 'project-name';
+    if (data.trim() === '') {
+      this.errorsService.addStateError('Project name can\'t be empty', key);
+    } else {
+      this.errorsService.removeStateError(key);
+    }
   }
 
   onChangeSettings(): void {
@@ -43,23 +48,31 @@ export class HeaderComponent implements AfterViewInit {
   }
 
   onSave(): void {
+    if (!this.checkSave()) return;
     this.save();
   }
 
   onSaveAndExit(): void {
+    if (!this.checkSave()) return;
     this.save().subscribe(x => {
       if (isErrorResponse(x)) {
-        console.dir({ x });
         throw new Error();
       }
       this.router.navigateByUrl('projects');
     });
   }
 
+  checkSave():boolean {
+    const canSave = !this.errorsService.areCurrentErrors();
+    if (!canSave) {
+      this.errorsService.addEventError('Can\'t save project while errors are not fixed');
+    }
+    return canSave;
+  }
+
   save(): Observable<unknown> {
     const project = this.projectDataService.export();
     const entities = this.entityService.exportEntities();
-    console.dir({ entities });
     return this.projectService.saveProject(this.projectId, project, entities);
   }
 

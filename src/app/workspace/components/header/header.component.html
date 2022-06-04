@@ -1,6 +1,6 @@
 <div class="header">
   <div class="title">
-    <input [(ngModel)]="projectDataService.name" type="text"  (input)="onStringInput($event)">
+    <input [(ngModel)]="projectDataService.name" type="text"  (ngModelChange)="onNameChange($event)">
   </div>
   <div class="button-row">
     <button (click)="onSave()">Save Project</button>

@@ -1,0 +1,31 @@
+.state-error, .event-error {
+  padding: 5px;
+  color: red;
+  border-bottom: grey 1px solid;
+  font-size: 13px;
+}
+
+.event-error {
+  display: flex;
+  flex-direction: row;
+}
+
+.event-error-message {
+  width: 80%;
+}
+
+.ok-button {
+  width: 20%;
+}
+
+button {
+  font-size: 13px;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgb(233, 233, 233);;
+}
