@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
+import { WorkspaceModule } from './workspace/workspace.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { ProjectsModule } from './projects/projects.module';
     BrowserModule,
     AppRoutingModule,
     ProjectsModule,
+    WorkspaceModule,
     AuthModule,
   ],
   providers: [],

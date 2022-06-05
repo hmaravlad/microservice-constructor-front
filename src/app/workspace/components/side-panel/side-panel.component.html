@@ -1,0 +1,6 @@
+<div *ngIf="isAPIEditor" >
+  <app-api-editor [apiConfig]="apiConfig" [id]="id"></app-api-editor>
+</div>
+<div *ngIf="isProjectEditor">
+  <app-project-editor></app-project-editor>
+</div>

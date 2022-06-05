@@ -1,0 +1,15 @@
+<div
+  #box 
+  id="box" 
+  style.left="{{ currX | toPx }}" 
+  style.top="{{ currY | toPx }}"
+  style.width="{{ width | toPx }}"
+  style.height="{{ height | toPx }}"
+>
+  <div 
+    #handle
+    id="handle"
+  ></div>
+  <div>{{id}}: {{type}}</div>
+  <div>{{name}}</div>
+</div>

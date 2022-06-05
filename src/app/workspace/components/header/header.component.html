@@ -1,0 +1,14 @@
+<div class="header">
+  <div class="title">
+    <input [(ngModel)]="projectDataService.name" type="text"  (ngModelChange)="onNameChange($event)">
+  </div>
+  <div class="button-row">
+    <button (click)="onSave()">Save Project</button>
+    <button (click)="onChangeSettings()">Edit Project</button>
+    <button (click)="onDelete()">Delete Project</button>
+    <button (click)="onExport()">Export</button>
+    <button (click)="onSaveAndExit()">Save and Exit</button>
+    <button (click)="onExit()">Exit</button>
+  </div>
+  <a #fileLink class="file-link"></a>
+</div>

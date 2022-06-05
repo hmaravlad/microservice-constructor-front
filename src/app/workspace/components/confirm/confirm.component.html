@@ -1,0 +1,13 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4>{{title || 'Confirm'}}</h4>
+  </div>
+  <div class="modal-body">
+    <p>{{message || 'Are you sure?'}}</p>
+  </div>
+  <div class="modal-footer">
+    <div class="buttons">
+      <button (click)="close()">Cancel</button>
+      <button (click)="confirm()">OK</button>
+    </div>
+  </div>

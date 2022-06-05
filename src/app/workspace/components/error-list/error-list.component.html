@@ -1,0 +1,9 @@
+<div class="error-list">
+  <div *ngFor="let eventError of eventErrors" class="event-error">
+    <div class="error-message event-error-message">{{eventError.message}}</div>
+    <button (click)="removeEventError(eventError.id)()" class="ok-button">OK</button>
+  </div>
+  <div *ngFor="let stateError of stateErrors" class="state-error">
+    <div class="error-message">{{stateError}}</div>
+  </div>
+</div>

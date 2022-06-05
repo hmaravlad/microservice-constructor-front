@@ -1,0 +1,15 @@
+<div id="editor">
+  <div *ngIf="activeEntity; then thenBlock else elseBlock"></div>
+  <ng-template #thenBlock>
+    <div class="header">{{activeEntity?.type}} - {{activeEntity?.id}}</div>
+    <div *ngFor="let entityInputData of entitiesInputData">
+      <app-entity-input 
+        [field]="entityInputData.fieldDescription"
+        [id]="entityInputData.id"
+        ></app-entity-input>
+    </div>
+    <button (click)="removeEntity()">Delete</button>
+    <button (click)="removeAllConnections()">Remove All Connections</button>
+  </ng-template>
+  <ng-template #elseBlock></ng-template>
+</div>

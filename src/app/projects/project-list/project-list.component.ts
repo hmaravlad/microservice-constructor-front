@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { isErrorResponse } from 'src/app/http-utils/query-error.entity';
+import { ProjectExported } from 'src/app/workspace/types/project-exported';
 import { Project } from '../project.entity';
 import { ProjectService } from '../project.service';
 
@@ -34,7 +35,22 @@ export class ProjectListComponent implements OnInit {
     this.currProject = project;
   }
 
-  newProject() {
+  onNewProject() {
+    const project: ProjectExported = {
+      name: 'Project',
+      fields: JSON.stringify('{}'),
+    };
+    this.projectService.newProject(project).subscribe(projectId => {
+      if (isErrorResponse(project)) {
+        throw new Error();
+      }
+      this.router.navigateByUrl(`workspace/${projectId}`);
+    });
+  }
 
+  onLoadProject() {
+    if (this.currProject) {
+      this.router.navigateByUrl(`workspace/${this.currProject?.id}`);
+    }
   }
 }

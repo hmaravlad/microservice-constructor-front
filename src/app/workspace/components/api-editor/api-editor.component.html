@@ -1,0 +1,128 @@
+<button (click)="onSubmit()">Submit</button>
+<button (click)="addEndpointGroup()">Add endpoint group</button>
+<div *ngFor="let endpointGroup of apiConfig.endpointGroups" class="box">
+  <div class="header">Endpoint Group</div>
+  <div class="input-group">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" [(ngModel)]="endpointGroup.name">
+  </div>
+  <div class="input-group">
+    <label for="prefix">Prefix:</label>
+    <input type="text" name="prefix" id="prefix" [(ngModel)]="endpointGroup.prefix">
+  </div>
+  <div *ngFor="let endpoint of endpointGroup.endpoints" class="box">
+    <div class="header">Endpoint</div>
+    <div class="input-group">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" [(ngModel)]="endpoint.name">
+    </div>
+    <div class="input-group">
+      <label for="path">Path:</label>
+      <input type="text" name="path" id="path" [(ngModel)]="endpoint.path">
+    </div>
+    <div class="input-group">
+      <label for="method">Method:</label>
+      <select type="text" name="method" id="method" [(ngModel)]="endpoint.method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="PATCH">PATCH</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+    </div>
+    <div class="box">
+      <div class="header">Request</div>
+      <div class="input-group">
+        <label for="statusCode">Status Code:</label>
+        <input type="number" name="statusCode" id="statusCode" [(ngModel)]="endpoint.request.statusCode">
+      </div>
+      <div class="input-group">
+        <label for="content">Content Type:</label>
+        <select name="content" [(ngModel)]="endpoint.request.content.type">
+          <option value="string">String</option>
+          <option value="number">Number</option>
+          <option value="boolean">Boolean</option>
+          <option value="array">Array</option>
+          <option *ngFor="let entity of endpointGroup.entities" [value]="entity.id">{{entity.name}}</option>
+        </select>
+        <div *ngIf="endpoint.request.content.type === 'array'">
+          <label for="items">Item Type</label>
+          <select name="items" [(ngModel)]="endpoint.request.content.items">
+            <option value="string">String</option>
+            <option value="number">Number</option>
+            <option value="boolean">Boolean</option>
+            <option *ngFor="let entity of endpointGroup.entities" [value]="entity.id">{{entity.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="header">Response</div>
+      <div class="input-group">
+        <label for="statusCode">Status Code:</label>
+        <input type="number" name="statusCode" id="statusCode" [(ngModel)]="endpoint.response.statusCode">
+      </div>
+      <div class="input-group">
+        <label for="content">Content Type:</label>
+        <select name="content" [(ngModel)]="endpoint.response.content.type">
+          <option value="string">String</option>
+          <option value="number">Number</option>
+          <option value="boolean">Boolean</option>
+          <option value="array">Array</option>
+          <option *ngFor="let entity of endpointGroup.entities" [value]="entity.id">{{entity.name}}</option>
+        </select>
+        <div *ngIf="endpoint.response.content.type === 'array'" class="input-group">
+          <label for="items">Item Type:</label>
+          <select name="items" [(ngModel)]="endpoint.response.content.items">
+            <option value="string">String</option>
+            <option value="number">Number</option>
+            <option value="boolean">Boolean</option>
+            <option *ngFor="let entity of endpointGroup.entities" [value]="entity.id">{{entity.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button (click)="addEndpoint(endpointGroup)">Add Endpoint</button>
+  </div>
+  <div *ngFor="let entity of endpointGroup.entities" class="box">
+    <div class="header">Entity</div>
+    <div class="input-group">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" [(ngModel)]="entity.name">
+    </div>
+    <div *ngFor="let field of entity.fields" class="box">
+      <div class="header">Field</div>
+      <div class="input-group">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" [(ngModel)]="field.name">
+      </div>
+      <div class="input-group">
+        <label for="type">Type:</label>
+        <select name="type" [(ngModel)]="field.type">
+          <option value="string">String</option>
+          <option value="number">Number</option>
+          <option value="boolean">Boolean</option>
+          <option value="array">Array</option>
+          <option *ngFor="let entity of endpointGroup.entities" [value]="entity.id">{{entity.name}}</option>
+        </select>
+        <div *ngIf="field.type === 'array'" class="input-group">
+          <label for="items">Item Type:</label>
+          <select name="items" [(ngModel)]="field.items">
+            <option value="string">String</option>
+            <option value="number">Number</option>
+            <option value="boolean">Boolean</option>
+            <option *ngFor="let entity of endpointGroup.entities" [value]="entity.id">{{entity.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button (click)="addField(entity)">Add Field</button>
+    </div>
+  </div>
+  <div>
+    <button (click)="addEntity(endpointGroup)">Add Entity</button>
+  </div>
+</div>

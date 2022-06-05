@@ -1,0 +1,14 @@
+
+<div id="sidebar">
+  <div id="toolbox" >
+    <div *ngFor="let entity of entities">
+      <app-menu-entity [type]="entity.name"></app-menu-entity>
+    </div>
+  </div>
+  <div id="editor">
+    <app-entity-editor></app-entity-editor>
+  </div>
+  <div id="errors">
+    <app-error-list></app-error-list>
+  </div>
+</div>
