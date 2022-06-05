@@ -24,6 +24,8 @@ export class EntityService {
 
   deletedEntityId$ = new Subject<number>();
 
+  errorKeys = new Set<string>();
+
   projectId = 1;
   initEntitiesLength = 0;
 
@@ -83,6 +85,9 @@ export class EntityService {
     const entity = this.entities[i];
     if (!entity) throw new Error('There is no entity with provided id');
     this.entities.splice(i, 1);
+    for (const key of this.errorKeys) {
+      this.errorsService.removeStateError(key);
+    }
     this.deletedEntityId$.next(id);
     if (this.activeEntity.getValue()?.id === id) {
       this.activeEntity.next(undefined);
@@ -134,8 +139,10 @@ export class EntityService {
     if (typeof value !== 'string') return;
     const key = `${field}-${id}`;
     if (value.trim() === '') {
+      this.errorKeys.add(key);
       this.errorsService.addStateError(`${id}: field "${field}" can't be empty`, key);
     } else {
+      this.errorKeys.delete(key);
       this.errorsService.removeStateError(key);
     }
   }
