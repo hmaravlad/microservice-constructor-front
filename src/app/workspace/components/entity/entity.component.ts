@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, fromEvent, map, merge, Observable, switchMap, takeUntil } from 'rxjs';
 import { EntityPositionProviderService } from '../../services/entity-position-provider.service';
 import { EntityService } from '../../services/entity.service';
@@ -50,6 +50,7 @@ export class EntityComponent implements OnInit {
     private entityPositionProvider: EntityPositionProviderService,
     private entityService: EntityService,
     private errorsService: ErrorsService,
+    private ref: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -93,6 +94,7 @@ export class EntityComponent implements OnInit {
       name$.subscribe(name => {
         if (typeof name == 'string') {
           this.name = name;
+          this.ref.detectChanges();
         }
       });
     }
@@ -193,7 +195,9 @@ export class EntityComponent implements OnInit {
   }
 
   setCoords(x: number, y: number) {
-    this.x.next(x);
-    this.y.next(y);
+    setTimeout(() => {
+      this.x.next(x);
+      this.y.next(y);
+    }, 1);
   }
 }
