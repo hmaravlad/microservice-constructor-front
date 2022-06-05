@@ -20,7 +20,7 @@
 
 .list-box {
   margin-top: 10px;
-  height: calc(100%-30px);
+  height: calc(100% - 30px);
   width: 60%;
   padding-left: 15px;
   padding-top: 0;
