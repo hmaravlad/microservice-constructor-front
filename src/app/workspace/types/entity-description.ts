@@ -1,7 +1,3 @@
-import { FieldDescription } from './field-description';
+import { EntityData } from 'microservice-constructor';
 
-export interface EntityDescription {
-  name: string;
-  fieldName: string;
-  fields: FieldDescription[];
-}
+export type EntityDescription = EntityData;

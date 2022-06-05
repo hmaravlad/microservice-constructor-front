@@ -1,7 +1,3 @@
-export interface FieldDescription {
-  name: string;
-  type: string;
-  isId?: boolean;
-  possibleValues?: string[];
-  references?: string[];
-}
+import { FieldData } from 'microservice-constructor';
+
+export type FieldDescription = FieldData;

@@ -18,7 +18,9 @@
     "@angular/platform-browser": "~13.1.0",
     "@angular/platform-browser-dynamic": "~13.1.0",
     "@angular/router": "~13.1.0",
+    "microservice-constructor": "^1.0.5",
     "ngx-simple-modal": "^1.4.17",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
